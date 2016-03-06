@@ -1,0 +1,40 @@
+LAB1
+
+task 1:
+the number is the number of threads that openpm will use to run the program, it was 8, and that is because it the default number of threads for that machine based on its logical CPU cores.
+
+task 2:
+should use minimum, as it shows the least erratic curve among all the graphs. the maximum curve seems to be the most erratic, as expected because the maximum time will most likely be caused by random events in the system
+
+task 3: speedup consistent after 4 cores, core i5, so quad core processor
+
+task 4:
+tembusu cluster has more processing nodes, and we try up to 40 threads to see how much speedup can we achieve and see if we are hitting a communication bottleneck first, or if we are hitting the ceiling for the maximum number of threads the cluster can handle. we see that the performance shows no notable impovement after 15-16 threads
+
+task 6:
+see a sharp jump when the memory being allocated goes from 8MB to 16MB. This is because on the local machine, there is limited on chip cache, and exceeding it leads to swapping memory with the RAM, causing slowdowns
+
+task 7: 
+L1: L1 cache is depleted quite fast, which shows when it has to get data from the other caches starting from 64KB array size. At this size, the array is too large to be held in the L1 cahce and hence data needs to be loaded and fetched from the lower level caches
+
+L3: we see a decrease in the cache misses percentage simply because as the array size increases, the loads increase but the array size is still well within the cache size, so the misses remain the same. this causes the miss ratio to decrease. it only increases once the cache cannot store the array, and needs to fetch blocks from RAM, after around 4MB
+
+LAB2
+task 1:
+
+16777216 is the largest integer that a float is able to represent exactly. 16,777,216 (2^24). after that, when we add 1 to it, the floating point representation of the next nearest integer 16,777,218 varies by greater than 1, hence when we add 1 to this number, it isnt able to reach the next possible representation and gets stuck at 16777216. this is because we have 23 bits for representing the mantissa after the decimal, and thus we can only shift the decimal point 23 times bu increasing the exponent. if we try to shift after that, there will be loss of precision, which happens for 2^24
+
+http://www.h-schmidt.net/FloatConverter/IEEE754.html
+http://stackoverflow.com/questions/3793838/which-is-the-first-integer-that-an-ieee-754-float-is-incapable-of-representing-e
+
+task 2:
+again, not enough mantissa bits left to represent, cos 1500k has 2^20 exponent already, so every change in the mantissa would be able to contribute to 0.001(1/8) , which is 0.125 so, the decimal point can only be 0.25 at that stage, which we can see by modifying the code. that is truncated to 0.2 and thus we see that result. after that, there isnt anymore precision left to represent a 0.25, and hence it gets truncated. at 4500k, we use up 2^22 exponent, and hence the smallest difference that the mantissa can make is that of 1/2, or 0.5. since 0.25 is lower, it gets truncated.
+
+task 3:
+difference is precision cos when we add large floats to smaller floats, we have to take the exponent of the larger float and hance we can only represent very little mantissa bits on the actual number. hence, if we start adding from the larger numbers, we will lose precision that we might have been able to retain if we added the smaller numbers first. this causes the difference, and in my opinion, the result from adding the smaller numbers first must be more accurate
+
+task 4:
+the threads do not finish at the same time, hence the order in which they enter the critical section of the program is not the same. this difference in order could lead to the partial results not being added in the same order every time. Hence, some values after the decimal point will be preserved in some cases, and truncated in others if the larger values were added first. If we see the partial result, we can see that it is the same in all 5 cases for each thread in itself. this is because each thread always adds in the same order, thus resulting in the same partial sum. on tembusu cluster, the result varies even more wildly, since there are more threads available and there are more possible total orders that the threads can complete their execution in
+
+task 7:
+here, we see the computation vs communication bottleneck. with a low enough number of processors, the communicaion bottleneck can be hidden as a proportion of the total processing time. however, as we increase the number of machines, we begin to see the computation time decrease and the communication time increase as a proportion of the total time taken.
