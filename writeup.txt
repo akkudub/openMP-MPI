@@ -38,3 +38,20 @@ the threads do not finish at the same time, hence the order in which they enter 
 
 task 7:
 here, we see the computation vs communication bottleneck. with a low enough number of processors, the communicaion bottleneck can be hidden as a proportion of the total processing time. however, as we increase the number of machines, we begin to see the computation time decrease and the communication time increase as a proportion of the total time taken.
+
+part 2:
+1) tabulate data
+	-openMP
+	-openMPI single machine
+	-openMPI multiple machines
+
+2) - analyse data from 1 to see the amdahl speedup, just increase cores to see decrease in time, keep problem constant
+   - get new data set for keeping time constant, increase problem size from 2, 4, 6, 8, 10, 12, 14, 16 for both openMP and openMPI
+should see a linear speedup, can confirm gustafson's law.
+
+3) actually just used a simple map reduce to see clearly the communication bottlenecks that arise in multi processor compute clsters
+
+should be
+used a map-reduce technique in openMPI to transfer data between the different threads to reduce communication bottleneck. instead of just one node responsible for sending out all the data, each node only transfers ad receives from a few nodes, reducing bandwith requirement. 
+also prevents the thread initialisation to be serialised, so that new threads dont have to wait on the older threads to get their data before they can start
+the reduce process minimizes the number of threads writing to the same variable, thus reducing race conditions and preventing one or more thread from having to wait before they can write to the result variable. better speedup due to reduction in wait 
